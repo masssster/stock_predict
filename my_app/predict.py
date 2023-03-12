@@ -43,6 +43,16 @@ def launch():
 def predict(saham,waktu,model_type):
     df = yf.download(saham+'.JK', start='2017-01-01' , end='2022-01-01') 
     df = df.reset_index()
+    css = """
+    <style>
+        .ag-root-wrapper {
+            height: 400px;
+        }
+        .ag-center-cols-container {
+            overflow-y: scroll !important;
+        }
+    </style>
+    """
     # df1 = yf.download(saham+'.JK', start='2017-01-01' , end='2023-01-01') 
     # df1 = df1.reset_index()    
     # df1 = df1.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
@@ -62,7 +72,6 @@ def predict(saham,waktu,model_type):
         forecast = forecast[forecast["ds"] >= "2022-01-01"]
         fc_table = forecast.reset_index()
         df_table = fc_table.rename(columns={'ds': 'Date','yhat1':'Close'})[['Date', 'Close']]
-        AgGrid(df_table)
     else :
         df = df.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
         model = pickle.load(open("my_app/FBP_"+saham+".pkl", "rb"))                                         
@@ -78,8 +87,12 @@ def predict(saham,waktu,model_type):
         forecast = forecast[forecast["ds"] >= "2022-01-01"]
         fc_table = forecast.reset_index()
         df_table = fc_table.rename(columns={'ds': 'Date','yhat':'Close'})[['Date', 'Close']]
+
+    with st.beta_container():
+        st.markdown(css, unsafe_allow_html=True)
         AgGrid(df_table)       
                                             
+
 
 
 # def exp(saham,waktu):
