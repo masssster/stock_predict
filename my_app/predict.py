@@ -48,7 +48,8 @@ def predict(saham,waktu,model_type):
     # df1 = df1.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
     if(model_type == "Neural"):
         df = df.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
-        model = pickle.load(open("NP_"+saham+".pkl", "rb"))                                         
+        m = "NP_"+saham+".pkl"
+        model = pickle.load(open(m, "rb"))                                         
         # model.fit(df)                                                         
         future = model.make_future_dataframe(df,periods = waktu, n_historic_predictions = True)                            
         forecast = model.predict(future)   
