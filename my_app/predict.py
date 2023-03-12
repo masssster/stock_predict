@@ -88,7 +88,7 @@ def predict(saham,waktu,model_type):
         fc_table = forecast.reset_index()
         df_table = fc_table.rename(columns={'ds': 'Date','yhat':'Close'})[['Date', 'Close']]
 
-    with st.beta_container():
+    with st.container():
         st.markdown(css, unsafe_allow_html=True)
         AgGrid(df_table)       
                                             
