@@ -90,7 +90,7 @@ def predict(saham,waktu,model_type):
 
     with st.container():
         st.markdown(css, unsafe_allow_html=True)
-        AgGrid(df_table)       
+        AgGrid(df_table,height=400)       
                                             
 
 
