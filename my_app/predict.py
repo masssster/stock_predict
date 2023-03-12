@@ -65,7 +65,7 @@ def predict(saham,waktu,model_type):
         AgGrid(df_table)
     else :
         df = df.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
-        model = pickle.load(open("FBP_"+saham+".pkl", "rb"))                                         
+        model = pickle.load(open("my_app/FBP_"+saham+".pkl", "rb"))                                         
         # model.fit(df)                                                         
         future = model.make_future_dataframe(periods = waktu)                            
         forecast = model.predict(future)   
