@@ -18,10 +18,11 @@ def launch():
     with tab1:
         with st.form("Form_Neural_Prophet"):
             st.subheader("Saham")
+            st.write("Aplikasi ini menggunakan Data 5 tahun dari tahun 2017 hingga tahun 2022 sebagai data training.")
             option = st.selectbox(
             'Pilih nama Saham yang ingin diprediksi',
             ('BBCA', 'AALI', 'MEGA', 'BUMI', 'BBRI'))
-            number = st.number_input('Jangka waktu Prediksi',format="%d",value=0,min_value=0,help="nilai minimal adalah 0 dan input harus berupa bilangan bulat")
+            number = st.number_input('Jangka waktu Prediksi (Hari)',format="%d",value=0,min_value=0,help="nilai minimal adalah 0 dan input harus berupa bilangan bulat")
             submitted = st.form_submit_button("Submit")
             if submitted:
                 predict(option,number,"Neural")
@@ -29,10 +30,11 @@ def launch():
         with tab2:
             with st.form("Form_Prophet"):
                 st.subheader("Saham")
+                st.write("Aplikasi ini menggunakan Data 5 tahun dari tahun 2017 hingga tahun 2022 sebagai data training.")
                 option = st.selectbox(
                 'Pilih nama Saham yang ingin diprediksi',
                 ('BBCA', 'AALI', 'MEGA', 'BUMI', 'BBRI'))
-                number = st.number_input('Jangka waktu Prediksi',format="%d",value=0,min_value=0,help="nilai minimal adalah 0 dan input harus berupa bilangan bulat")
+                number = st.number_input('Jangka waktu Prediksi (Hari)',format="%d",value=0,min_value=0,help="nilai minimal adalah 0 dan input harus berupa bilangan bulat")
                 submitted = st.form_submit_button("Submit")
                 if submitted:
                     predict(option,number,"Prophet")
