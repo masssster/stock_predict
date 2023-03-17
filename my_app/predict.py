@@ -71,7 +71,7 @@ def predict(saham,waktu,model_type):
     with st.container():
         if(model_type == "Neural"):
             st.header('Modeling Parameter')
-            st.write("n_changepoints : " + param_neural[saham][0])
+            st.write("n_changepoints : " + str(param_neural[saham][0].toString()))
             st.write("seasonality_mode : " + param_neural[saham][1])
             st.write('seasonality_reg : ' + param_neural[saham][2])
             st.write("trend_reg : " + param_neural[saham][3])
