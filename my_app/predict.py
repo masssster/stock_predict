@@ -17,23 +17,23 @@ def launch():
     tab1, tab2 = st.tabs(["Neural Prophet", "Prophet"])
     with tab1:
         with st.form("Form_Neural_Prophet"):
-            st.subheader("Saham")
+            st.subheader("Stock")
             option = st.selectbox(
-            'Pilih nama Saham yang ingin diprediksi',
+            'Choose which stock to predict',
             ('BBCA', 'AALI', 'MEGA', 'BUMI', 'BBRI'))
-            number = st.number_input('Jangka waktu Prediksi (Hari)',format="%d",value=0,min_value=0,help="nilai minimal adalah 0 dan input harus berupa bilangan bulat")
-            submitted = st.form_submit_button("Submit")
+            number = st.number_input('Prediction Timeframe (Day)',format="%d",value=0,min_value=0,max_value = 9999,help="min value is 0, max value is 9999, and input must be integer")
+            submitted = st.form_submit_button("Predict")
             if submitted:
                 predict(option,number,"Neural")
 
         with tab2:
             with st.form("Form_Prophet"):
-                st.subheader("Saham")
+                st.subheader("Stock")
                 option = st.selectbox(
-                'Pilih nama Saham yang ingin diprediksi',
+                'Choose which stock to predict',
                 ('BBCA', 'AALI', 'MEGA', 'BUMI', 'BBRI'))
-                number = st.number_input('Jangka waktu Prediksi (Hari)',format="%d",value=0,min_value=0,help="nilai minimal adalah 0 dan input harus berupa bilangan bulat")
-                submitted = st.form_submit_button("Submit")
+                number = st.number_input('Prediction Timeframe (Day)',format="%d",value=0,min_value=0,max_value = 9999,help="min value is 0, max value is 9999, and input must be integer")
+                submitted = st.form_submit_button("Predict")
                 if submitted:
                     predict(option,number,"Prophet")
 
@@ -41,6 +41,12 @@ def launch():
     pass
 
 def predict(saham,waktu,model_type):
+    param_neural = {"BBCA" : [100,"multiplicative",0.1,0.001],
+                    "AALI" : [100,"multiplicative",0.1,0.001],
+                    "MEGA" : [100,"multiplicative",0.1,0.001],
+                    "BUMI" : [100,"multiplicative",0.1,0.001],
+                    "BBRI" : [100,"multiplicative",0.1,0.001],
+    }
     df = yf.download(saham+'.JK', start='2017-01-01' , end='2022-01-01') 
     df = df.reset_index()
     css = """
@@ -56,42 +62,70 @@ def predict(saham,waktu,model_type):
     # df1 = yf.download(saham+'.JK', start='2017-01-01' , end='2023-01-01') 
     # df1 = df1.reset_index()    
     # df1 = df1.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
-    if(model_type == "Neural"):
-        df = df.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
-        m = "my_app/NP_"+saham+".pkl"
-        model = pickle.load(open(m, "rb"))                                         
-        # model.fit(df)                                                         
-        future = model.make_future_dataframe(df,periods = waktu, n_historic_predictions = True)                            
-        forecast = model.predict(future)   
-        fig = plt.figure(figsize=(16, 9),dpi=100)
-        plt.plot(df['ds'], df['y'], 'y' ,label = "Actual")         
-        plt.plot(forecast['ds'], forecast['yhat1'], 'k', label = "Predicted")     
-        plt.legend()
-        fig_html = mpld3.fig_to_html(fig)
-        components.html(fig_html, height=1000, width= 1600)  
-        forecast = forecast[forecast["ds"] >= "2022-01-01"]
-        fc_table = forecast.reset_index()
-        df_table = fc_table.rename(columns={'ds': 'Date','yhat1':'Close'})[['Date', 'Close']]
-    else :
-        df = df.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
-        model = pickle.load(open("my_app/FBP_"+saham+".pkl", "rb"))                                         
-        # model.fit(df)                                                         
-        future = model.make_future_dataframe(periods = waktu)                            
-        forecast = model.predict(future)   
-        fig = plt.figure(figsize=(16, 9),dpi=100)
-        plt.plot(df['ds'], df['y'], 'y' ,label = "Actual")         
-        plt.plot(forecast['ds'], forecast['yhat'], 'k', label = "Predicted")     
-        plt.legend()
-        fig_html = mpld3.fig_to_html(fig)
-        components.html(fig_html, height=1000, width= 1600)  
-        forecast = forecast[forecast["ds"] >= "2022-01-01"]
-        fc_table = forecast.reset_index()
-        df_table = fc_table.rename(columns={'ds': 'Date','yhat':'Close'})[['Date', 'Close']]
+    with st.container():
+        st.header('Dataset')
+        st.write("Data : BBCA.")
+        st.write("Timeframe : 2017-01-01 until 2022-01-01.")
+        st.write('Target Column : Close')
 
     with st.container():
-        st.markdown(css, unsafe_allow_html=True)
-        AgGrid(df_table,height=400)       
-                                            
+        if(model_type == "Neural"):
+            st.header('Modeling Parameter')
+            st.write("n_changepoints : ")
+            st.write("seasonality_mode : 2017-01-01 until 2022-01-01.")
+            st.write('seasonality_reg : Close')
+            st.write("trend_reg : ")
+            st.write("daily_seasonality : False.")
+            st.write('weekly_seasonality : True.')
+            st.write("yearly_seasonality : True.")
+        if(model_type == "Prophet"):
+            st.header('Modeling Parameter')
+            st.write("n_changepoints : ")
+            st.write("seasonality_mode : 2017-01-01 until 2022-01-01.")
+            st.write('seasonality_reg : Close')
+            st.write("trend_reg : ")
+            st.write("daily_seasonality : False.")
+            st.write('weekly_seasonality : True.')
+            st.write("yearly_seasonality : True.")
+
+    with st.container():
+        st.header('Forecast')
+        if(model_type == "Neural"):
+            df = df.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
+            m = "my_app/NP_"+saham+".pkl"
+            model = pickle.load(open(m, "rb"))                                         
+            # model.fit(df)                                                         
+            future = model.make_future_dataframe(df,periods = waktu, n_historic_predictions = True)                            
+            forecast = model.predict(future)   
+            fig = plt.figure(figsize=(16, 9),dpi=100)
+            plt.plot(df['ds'], df['y'], 'y' ,label = "Actual")         
+            plt.plot(forecast['ds'], forecast['yhat1'], 'k', label = "Predicted")     
+            plt.legend()
+            fig_html = mpld3.fig_to_html(fig)
+            components.html(fig_html, height=1000, width= 1600)  
+            forecast = forecast[forecast["ds"] >= "2022-01-01"]
+            fc_table = forecast.reset_index()
+            df_table = fc_table.rename(columns={'ds': 'Date','yhat1':'Close'})[['Date', 'Close']]
+        else :
+            df = df.rename(columns={'Date': 'ds','Close':'y'})[['ds', 'y']]
+            model = pickle.load(open("my_app/FBP_"+saham+".pkl", "rb"))                                         
+            # model.fit(df)                                                         
+            future = model.make_future_dataframe(periods = waktu)                            
+            forecast = model.predict(future)   
+            fig = plt.figure(figsize=(16, 9),dpi=100)
+            plt.plot(df['ds'], df['y'], 'y' ,label = "Actual")         
+            plt.plot(forecast['ds'], forecast['yhat'], 'k', label = "Predicted")     
+            plt.legend()
+            fig_html = mpld3.fig_to_html(fig)
+            components.html(fig_html, height=1000, width= 1600)  
+            forecast = forecast[forecast["ds"] >= "2022-01-01"]
+            fc_table = forecast.reset_index()
+            df_table = fc_table.rename(columns={'ds': 'Date','yhat':'Close'})[['Date', 'Close']]
+
+        with st.container():
+            st.markdown(css, unsafe_allow_html=True)
+            AgGrid(df_table,height=400)       
+                                                
 
 
 
