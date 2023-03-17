@@ -17,5 +17,11 @@ def launch():
         st.write("It is fast and provides completely automated forecasts that can be tuned by hand by data scientists and analysts.")
         st.write('prophet is the good enough model for stock price prediction based on skripsi experiment.')
         st.write('More information about prophet from https://facebook.github.io/prophet/')
+    with st.container():
+        st.header('Dataset')
+        st.write("Stock Predict use dataset from 2017 until 2022")
+        st.write("Dataset taken from yahoo finance.")
+        st.write('Stock Predict will do prediction based on closing price')
+        st.write('More information about yahoo finance from https://finance.yahoo.com/')
         
     pass
