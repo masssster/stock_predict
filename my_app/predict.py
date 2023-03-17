@@ -42,10 +42,10 @@ def launch():
 
 def predict(saham,waktu,model_type):
     param_neural = {"BBCA" : [100,"multiplicative",0.1,0.001],
-                    "AALI" : [100,"multiplicative",0.1,0.001],
-                    "MEGA" : [100,"multiplicative",0.1,0.001],
-                    "BUMI" : [100,"multiplicative",0.1,0.001],
-                    "BBRI" : [100,"multiplicative",0.1,0.001],
+                    "AALI" : [100,"additive",10,100],
+                    "MEGA" : [150,"additive",0.1,0.01],
+                    "BUMI" : [200,"multiplicative",100,1],
+                    "BBRI" : [150,"multiplicative",100,0.1],
     }
     df = yf.download(saham+'.JK', start='2017-01-01' , end='2022-01-01') 
     df = df.reset_index()
@@ -71,10 +71,10 @@ def predict(saham,waktu,model_type):
     with st.container():
         if(model_type == "Neural"):
             st.header('Modeling Parameter')
-            st.write("n_changepoints : ")
-            st.write("seasonality_mode : 2017-01-01 until 2022-01-01.")
-            st.write('seasonality_reg : Close')
-            st.write("trend_reg : ")
+            st.write("n_changepoints : " + param_neural[saham][0])
+            st.write("seasonality_mode : " + param_neural[saham][1])
+            st.write('seasonality_reg : ' + param_neural[saham][2])
+            st.write("trend_reg : " + param_neural[saham][3])
             st.write("daily_seasonality : False.")
             st.write('weekly_seasonality : True.')
             st.write("yearly_seasonality : True.")
