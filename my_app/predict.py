@@ -107,7 +107,7 @@ def predict(saham,waktu,model_type):
             fig = plt.figure(figsize=(16, 9),dpi=100)
             plt.plot(df['ds'], df['y'], 'y' ,label = "Actual")         
             plt.plot(df['ds'], forecast['yhat1'][forecast["ds"] <= "2022-01-01"], 'k', label = "Predicted")     
-            plt.plot(forecast['ds'], forecast['yhat1'][forecast["ds"] >= "2022-01-01"], 'k', label = "Forecast")     
+            plt.plot(forecast['ds'], forecast['yhat1'][forecast["ds"] >= "2022-01-01"], 'r', label = "Forecast")     
             plt.legend()
             fig_html = mpld3.fig_to_html(fig)
             components.html(fig_html, height=1000, width= 1600)  
