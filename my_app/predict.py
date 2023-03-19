@@ -103,7 +103,7 @@ def predict(saham,waktu,model_type):
             # model.fit(df)                                                         
             future = model.make_future_dataframe(df,periods = waktu, n_historic_predictions = True)                            
             forecast = model.predict(future)   
-            st.write("MAPE : " + str(mean_absolute_percentage_error(forecast['yhat1'][forecast["ds"]  < "2021-12-30"],df['y'])))
+            st.write("MAPE : " + str(mean_absolute_percentage_error(forecast['yhat1'][forecast["ds"]  <= "2021-12-30"],df['y'])))
             fig = plt.figure(figsize=(16, 9),dpi=100)
             plt.plot(df['ds'], df['y'], 'y' ,label = "Actual")         
             plt.plot(df['ds'], forecast['yhat1'][forecast["ds"] <= "2021-12-30"], 'k', label = "Predicted")     
