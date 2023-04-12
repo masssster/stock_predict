@@ -4,8 +4,8 @@ plotly==5.13.0
 prophet==1.1.2
 scikit-learn==1.2.1
 scipy==1.10.1
-streamlit==1.18.1
-streamlit-aggrid==0.3.3
-streamlit-option-menu==0.3.2
-yfinance==0.2.17
+streamlit
+streamlit-aggrid
+streamlit-option-menu
+yfinance
 
